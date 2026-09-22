@@ -5,39 +5,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080d20">
   <title>KJ AI</title>
-
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <div class="ai-container">
+<div class="ai-container">
 
-    <div class="header">
-      <h1>KJ AI</h1>
-      <p>Your AI Assistant</p>
-    </div>
-
-    <div id="chatBox" class="chat-box">
-      <div class="message ai-message">
-        Hello 👋 I'm KJ AI. How can I help you?
-      </div>
-    </div>
-
-    <div class="input-area">
-      <input
-        type="text"
-        id="userInput"
-        placeholder="Ask KJ AI anything..."
-        autocomplete="off"
-      >
-
-      <button id="sendBtn">Send</button>
-    </div>
-
+  <div class="header">
+    <h1>KJ AI</h1>
+    <p>Your AI Assistant</p>
   </div>
 
-  <script>
-    const userInput = document.getElementById("userInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const chatBox =
+  <div id="chatBox" class="chat-box">
+    <div class="message ai-message">
+      Hello 👋 I'm KJ AI. How can I help you?
+    </div>
+  </div>
+
+  <div class="input-area">
+    <input
+      id="userInput"
+      type="text"
+      placeholder="Ask KJ AI anything..."
+    >
+
+    <button type="button" onclick="sendMessage()">
+      Send
+    </button>
+  </div>
+
+</div>
+
+<script>
+async function sendMessage() {
+
+  const input = document.getElementById("userInput");
+  const chatBox = document.getElementById("chatBox");
+
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  const userMessage = document.createElement("div");
+  userMessage.className = "message user-message";
+  userMessage.textContent = message;
+  chatBox.appendChild(userMessage);
+
+  input.value = "";
+
+  const thinking = document.createElement("div");
+  thinking.className = "message ai-message";
+  thinking.textContent = "Thinking...";
+  chatBox.appendChild(thinking);
+
+  try {
+
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: message
+      })
+    });
+
+    const data = await response.json();
+
+    thinking.remove();
+
+    const aiMessage = document.createElement("div");
+    aiMessage.className = "message ai-message";
+    aiMessage.textContent =
+      data.reply || "KJ AI could not reply.";
+
+    chatBox.appendChild(aiMessage);
+
+  } catch (error) {
+
+    thinking.textContent =
+      "Connection error. Please try again.";
+
+  }
+
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+document.getElementById("userInput").addEventListener("keydown", function(event) {
+
+  if (event.key === "Enter") {
+    sendMessage();
+  }
+
+});
+</script>
+
+</body>
+</html>
