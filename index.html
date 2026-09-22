@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d20">
+
+<title>KJ AI</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <h1>KJ AI</h1>
+    <p>Your AI Assistant</p>
+  </div>
+
+  <div class="chat-box" id="messages">
+    <div class="message ai">
+      Hello 👋 I'm KJ AI. How can I help you?
+    </div>
+  </div>
+
+  <div class="input-area">
+    <input
+      type="text"
+      id="userInput"
+      placeholder="Ask KJ AI anything..."
+    >
+
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+</div>
+
+<script>
+function sendMessage() {
+  const input = document.getElementById("userInput");
+  const messages = document.getElementById("messages");
+
+  const text = input.value.trim();
+
+  if (text === "") {
+    return;
+  }
+
+  const userMessage = document.createElement("div");
+  userMessage.className = "message user";
+  userMessage.textContent = text;
+
+  messages.appendChild(userMessage);
+
+  const aiMessage = document.createElement("div");
+  aiMessage.className = "message ai";
+  aiMessage.textContent = "KJ AI: I'm here to help you.";
+
+  messages.appendChild(aiMessage);
+
+  input.value = "";
+}
+</script>
+
+</body>
+</html>
